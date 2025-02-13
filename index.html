@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hi baby, I love you</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-color: #483C32;
+      background-image: url('Brown Vintage Fashion Photo Collage (Landscape).png');
+      background-size: cover; /* Cover the entire background */
+      background-position: center; /* Center the background image */
+      background-repeat: no-repeat; /* Prevent the image from repeating */
+      background-attachment: fixed; /* Fix the background in place */
+      overflow: hidden; /* Prevent scrolling */
+    }
+    h1 {
+      color: #6fce62;
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-family: 'Times New Roman', Times, serif, sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #9caf88;
+      ;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #00b354;
+    }
+  </style>
+</head>
+<body>
+  <h1>HINT: OUR MONTHSARY (MMDDYY)</h1>
+  <input type="password" id="password" placeholder="Enter Password">
+  <button onclick="checkPassword()">Submit</button>
+
+  <script>
+    function checkPassword() {
+      const password = document.getElementById('password').value;
+      if (password === '082721') { // Replace with your desired password
+        window.location.href = 'frontt.html'; // Redirect to photo booth page
+      } else {
+        alert('LUH DI MO ALAM MONTHSARY NATIN?');
+      }
+    }
+
+    
+  </script>
+</body>
+</html>
