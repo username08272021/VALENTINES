@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Valentines and Monthsary Lovey</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-color: #9caf88;
+      overflow: hidden; /* Prevent scrolling */
+    }
+    #main-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* Space between camera feed and polaroid grid */
+      align-items: flex-start; /* Align items to the top */
+    }
+    #camera-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #video {
+      width: 480px; /* Larger camera feed */
+      height: 360px;
+      transform: scaleX(-1); /* Flip the camera feed horizontally */
+      border: 2px solid #ffffff; /* Border for camera feed */
+    }
+    #photo-preview {
+      width: 320px;
+      height: 240px;
+      border: 2px solid #ffffff;
+      object-fit: cover;
+      display: none; /* Hide preview */
+    }
+    #photo-grid {
+      display: flex;
+      flex-direction: column; /* Vertical layout */
+      gap: 0; /* No gap between photos */
+      border: 2px solid #ffffff; /* Border for polaroid grid */
+      padding: 10px; /* Padding for polaroid grid */
+      background-color: #fff; /* Background for polaroid grid */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for polaroid grid */
+    }
+    #photo-grid img {
+      width: 240px; /* Smaller than the camera feed */
+      height: 180px;
+      object-fit: cover;
+      border: 2px solid #ffffff; /* Border around each photo */
+      margin-bottom: -2px; /* Remove gap between photos */
+      background-color: #fff; /* Polaroid background */
+      padding: 10px; /* Polaroid padding */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Polaroid shadow */
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 12px;
+      width: 120px; /* Same width as the camera feed */
+    }
+    button:hover {
+      background-color: #5b9447;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #483C32; text-align: left;">Happy taking photos my pretty darling~</h1>
+  <div id="main-container">
+    <!-- Camera Feed and Button -->
+    <div id="camera-container">
+      <!-- Live Camera Feed -->
+      <video id="video" autoplay></video>
+      <!-- Capture Button -->
+      <button id="capture-btn">Capture Photo</button>
+    </div>
+    <!-- Polaroid Grid -->
+    <div id="photo-grid">
+      <img id="photo1" alt="Photo 1" style="display: none;">
+      <img id="photo2" alt="Photo 2" style="display: none;">
+      <img id="photo3" alt="Photo 3" style="display: none;">
+    </div>
+  </div>
+  <!-- Buttons -->
+  <button id="retake-btn" style="display:none;">Retake</button>
+  <button id="download-btn" style="display:none;">Download Photo</button>
+
+  <script>
+    // Get DOM elements
+    const video = document.getElementById('video');
+    const canvas = document.createElement('canvas');
+    const photoGrid = document.getElementById('photo-grid');
+    const captureBtn = document.getElementById('capture-btn');
+    const retakeBtn = document.getElementById('retake-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const photos = [
+      document.getElementById('photo1'),
+      document.getElementById('photo2'),
+      document.getElementById('photo3'),
+    ];
+
+    let photoCount = 0; // Track how many photos have been taken
+
+    // Access the camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        console.error('Error accessing camera:', err);
+        alert('Unable to access camera. Please allow camera permissions.');
+      });
+
+    // Capture photo
+    captureBtn.addEventListener('click', () => {
+      if (photoCount >= 3) {
+        alert('You have already taken 3 photos!');
+        return;
+      }
+
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Flip the captured image horizontally
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1);
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Add the captured photo to the grid
+      photos[photoCount].src = canvas.toDataURL('image/png');
+      photos[photoCount].style.display = 'block';
+      photoCount++;
+
+      // Show retake and download buttons after 3 photos are taken
+      if (photoCount === 3) {
+        retakeBtn.style.display = 'inline-block';
+        downloadBtn.style.display = 'inline-block';
+        captureBtn.style.display = 'none';
+      }
+    });
+
+    // Retake all photos
+    retakeBtn.addEventListener('click', () => {
+      photoCount = 0;
+      photos.forEach((photo) => {
+        photo.src = '';
+        photo.style.display = 'none';
+      });
+      retakeBtn.style.display = 'none';
+      downloadBtn.style.display = 'none';
+      captureBtn.style.display = 'inline-block';
+    });
+
+    // Download the grid as an image
+    downloadBtn.addEventListener('click', () => {
+      // Create a new canvas to combine the 3 photos vertically
+      const gridCanvas = document.createElement('canvas');
+      const gridContext = gridCanvas.getContext('2d');
+      gridCanvas.width = 264; // Width of each photo + padding + border
+      gridCanvas.height = 564; // 3 photos * (height + padding + border)
+
+      // Draw the polaroid grid background
+      gridContext.fillStyle = '#fff'; // White background
+      gridContext.fillRect(0, 0, gridCanvas.width, gridCanvas.height);
+
+      // Draw each photo onto the grid canvas with borders
+      photos.forEach((photo, index) => {
+        const y = index * 188; // 180px height + 8px padding/border
+        gridContext.drawImage(photo, 12, y + 12, 240, 180); // Draw photo with padding
+      });
+
+      // Download the grid as an image
+      const link = document.createElement('a');
+      link.download = 'photo-grid.png';
+      link.href = gridCanvas.toDataURL('image/png');
+      link.click();
+
+      generateVideo();
+});
+    // Generate video (placeholder for now)
+    function generateVideo() {
+      alert('Video is being generated...');
+      // Add logic to generate and deliver the video
+      // Example: Redirect to a video file or use a video generation API
+      window.location.href = 'https://youtu.be/0dLezZIZOAQ?si=KXx0dZ5w8j9IcuY4&t=155'; // Replace with your video file or logic
+    }
+  </script>
+</body>
+</html>
