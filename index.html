@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hi baby, I love you</title>
+  <title>PHOTO BOOTH</title>
   <style>
     body {
       font-family: 'Times New Roman', Times, serif, sans-serif;
@@ -19,7 +19,7 @@
       overflow: hidden; /* Prevent scrolling */
     }
     h1 {
-      color: #6fce62;
+      color: #C3B1E1;
       text-align: center;
     }
     input {
@@ -32,33 +32,34 @@
       font-family: 'Times New Roman', Times, serif, sans-serif;
       font-size: 16px;
       cursor: pointer;
-      background-color: #9caf88;
+      background-color: #CCCCFF;
       ;
       color: white;
       border: none;
       border-radius: 5px;
     }
     button:hover {
-      background-color: #00b354;
+      background-color: #E0B0FF;
     }
   </style>
 </head>
 <body>
-  <h1>HINT: OUR MONTHSARY (MMDDYY)</h1>
+  <h1>HINT: ZAI'S BDAY + MAU'S BDAY (DAY ONLY) </h1>
   <input type="password" id="password" placeholder="Enter Password">
   <button onclick="checkPassword()">Submit</button>
 
   <script>
     function checkPassword() {
       const password = document.getElementById('password').value;
-      if (password === '082721') { // Replace with your desired password
+      if (password === '26') { // Replace with your desired password
         window.location.href = 'frontt.html'; // Redirect to photo booth page
       } else {
-        alert('LUH DI MO ALAM MONTHSARY NATIN?');
+        alert('LUH DI MO ALAM BASIC MATH?');
       }
     }
 
     
   </script>
 </body>
+
 </html>
